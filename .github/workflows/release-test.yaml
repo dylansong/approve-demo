@@ -1,0 +1,20 @@
+name: Release approval
+
+on:
+  # 仅当 main 分支上的 Release 被 “Publish” 时触发
+  release:
+    types: [published]
+
+jobs:
+  wait_for_approval:
+    if: ${{ github.event.release.target_commitish == 'main' }}
+    runs-on: ubuntu-latest
+
+    # 指向上面创建的环境，触发人工审批
+    environment:
+      name: prod 
+      url: ${{ github.event.release.html_url }}
+
+    steps:
+      - name: Echo after approval
+        run: echo "Release ${{ github.event.release.tag_name }} 已获 dylansong2 批准 ✅"
